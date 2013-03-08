@@ -19,7 +19,7 @@ main(){
 	fi
  	#autodetermine the file (limit to 1 file to prevent failing if there are multiple zipped files in the current dir
 	partfile=$(echo $partfiles|cut -d' ' -f1|sed 's/\.\///')
-	basepartfiles=`echo "$partfiles" | sed 's/.z01//' `
+	basepartfiles=$(echo "$partfiles" | sed 's/.z01//')
 	concatfile="$basepartfiles"".concatenated.zip" 
 	
 	checkfiles
