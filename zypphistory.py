@@ -8,6 +8,10 @@
 # The code is GPL 3.0(GNU General Public License)
 # ( http://www.gnu.org/copyleft/gpl.html )
 #
+# Output RST by Apie
+# You can now easily convert to HTML like this:
+# python zypphistory.py | rst2html.py - history.html
+
 import csv
 import subprocess
 from datetime import datetime, timedelta
@@ -31,14 +35,22 @@ installedSince = datetime.now() - timedelta(days=options.INSTALLDAYS)
 changedSince = datetime.now() - timedelta(days=options.CHANGEDAYS)
 
 zyppHistReader = csv.reader(open(zyppHistFilename, 'rb'), delimiter='|')
+
+title = '%d day changelogs of software installed in the last %d days' % (
+    options.CHANGEDAYS, options.INSTALLDAYS)
+print title
+print '-' * len(title)
+
 for historyRec in zyppHistReader:
     if historyRec[0][0] != '#' and historyRec[1] == 'install':
         installDate = datetime.strptime(historyRec[0], '%Y-%m-%d %H:%M:%S')
         if installDate >= installedSince:
             packageName = historyRec[2]
-            print '=================================================='
-            print '+Package: ', installDate, packageName
-            print '------------------------------'
+            print ''
+            packagenameanddate = '%s %s' % (installDate, packageName)
+            print packagenameanddate
+            print '=' * len(packagenameanddate)
+            print ''
             rpmProcess = subprocess.Popen(
                 ['rpm', '-q', '--changelog', packageName],
                 shell=False, stdin=None, stdout=subprocess.PIPE,
@@ -53,10 +65,11 @@ for historyRec in zyppHistReader:
                 try:
                     if line[0] == '*' and line[1] == ' ' and len(line) > 17:
                         changeDate = datetime.strptime(line[6:17], '%b %d %Y')
+                        line = line[2:len(line)]
                         if changeDate < changedSince:
                             break
                 except ValueError:
                     pass  # not a date - move on
-                print line,
+                print line
             rpmProcess.stdout.close()
             rpmProcess.stderr.close()
