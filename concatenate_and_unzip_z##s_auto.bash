@@ -1,7 +1,7 @@
 #!/bin/bash
 #author: apie
 #description: Script to automatically find, concatenate, unzip and move partial zip-archives of the format z01,z02,z0(n-1),zip.
-#v0.1 01-10-2013 initial
+#v0.1 01-10-2012 initial
 #v0.2 31-12-2012 handle spaces correctly, better check for archives
 #v0.3 07-01-2013 better handling of dots in filenames
 #v0.4 08-03-2013 check for olddir existance, determine scriptdir
