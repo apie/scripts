@@ -58,7 +58,7 @@ for historyRec in zyppHistReader:
                 close_fds=True)
             rpmProcess.wait()
             if rpmProcess.returncode != 0:
-                print '*** ERROR (return code was ', rpmProcess.returncode, ')'
+                print 'ERROR (return code was ', rpmProcess.returncode, ')'
             for line in rpmProcess.stderr:
                 print line,
             for line in rpmProcess.stdout:
