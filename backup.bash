@@ -48,10 +48,10 @@ set -o nounset
 
 
 invalid(){
- echo "Invalid arguments."
- echo "Should be inc|full"
- echo "Exiting"
- exit 1
+  echo "Invalid arguments."
+  echo "Should be inc|full"
+  echo "Exiting"
+  exit 1
 }
 
 ##### CHECKS
@@ -62,7 +62,7 @@ then
 fi
 if [ ! -r $logfiledir ] #logfiledirectory writable
 then
-	echo "Dir not writable! "$logfiledir
+  echo "Dir not writable! "$logfiledir
   exit 1
 fi
 if [ ! -r $remoterootdir ] #remoterootdir writable
@@ -79,34 +79,34 @@ fi
 
 if [ $# -ne 1 ]
 then
- invalid
+  invalid
 fi
 ##### 
 
 ##### FUNCTIONS
 
 duplicitycommand(){
-	srcdir=$1
-	dstdir=$2
+  srcdir=$1
+  dstdir=$2
   options=''
-	if [ $# -gt 2 ]
-	then
-		shift 2
-		options=$* #options may contain spaces
-	fi
-	echo 'srcdir '$srcdir
-	echo 'dstdir '$dstdir
-	echo 'options '$options
+  if [ $# -gt 2 ]
+  then
+    shift 2
+    options=$* #options may contain spaces
+  fi
+  echo 'srcdir '$srcdir
+  echo 'dstdir '$dstdir
+  echo 'options '$options
 
-	if [ ! -d $srcdir ]
-	then
-		echo "Dir does not exist! "$srcdir
-		exit 1
-	fi
+  if [ ! -d $srcdir ]
+  then
+    echo "Dir does not exist! "$srcdir
+    exit 1
+  fi
 
-	if [ $usepassphrase == "false" ]
-	then
-		options+=' --use-agent'
+  if [ $usepassphrase == "false" ]
+  then
+    options+=' --use-agent'
   fi
 #--dry-run
   options+=' --allow-source-mismatch'\
@@ -117,7 +117,7 @@ duplicitycommand(){
 ' --file-prefix '$dstdir'_ '
 
   commandd='/usr/bin/duplicity '$full' '$options' '$srcdir' file://'$remoterootdir'/'$dstdir'/'
-	$commandd
+  $commandd
 }
 
 writelines(){
@@ -155,15 +155,15 @@ handlelog(){
 }
 
 dobackup(){
-	if [ $# -lt 2 ]
-	then
-	  echo "Need at least 2 arguments to dobackup()"
-		exit 1
-	fi
-	srcdir=$1
+  if [ $# -lt 2 ]
+  then
+    echo "Need at least 2 arguments to dobackup()"
+    exit 1
+  fi
+  srcdir=$1
   dstdir=$2
   shift 2
-	options=$* #options may contain spaces
+  options=$* #options may contain spaces
 
   writelines $dstdir
   duplicitycommand $srcdir $dstdir $options
@@ -172,17 +172,17 @@ dobackup(){
 }
 
 startbackup(){
-	if [ $usepassphrase == "true" ]
-	then
+  if [ $usepassphrase == "true" ]
+  then
     export PASSPHRASE=$(tr 'a-zA-Z' 'n-za-mN-ZA-N' < $gpgpassfile)
-	fi
+  fi
 
-	echo '' > "$logfiledir"/"$logfilename"
+  echo '' > "$logfiledir"/"$logfilename"
 
   for (( i=0; i<${#backuptargets[@]}; i++ ));
   do
     IFS='+'
-		read -r dstdir srcdir options <<< "${backuptargets[$i]}"
+    read -r dstdir srcdir options <<< "${backuptargets[$i]}"
     IFS=' '
     dobackup $srcdir $dstdir $options
   done
